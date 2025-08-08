@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     dir: "src",
-    workspace: [{ extends: true, test: { name: "unit", dir: "src/domain" } }],
+    projects: [{ extends: true, test: { name: "unit", dir: "src/domain" } }],
   },
   resolve: {
     alias: {

@@ -6,13 +6,19 @@
   "scripts": {
     "start:dev": "tsx watch src/infra/server/server.ts",
     "start": "node build/server.js",
-    "build": "tsup src --out-dir build"
+    "build": "tsup src --out-dir build",
+    "test": "vitest run --project unit",
+    "test:e2e": "vitest run -c ./vitest.e2e.config.ts",
+    "test:watch": "vitest --project unit",
+    "test:e2e:watch": "vitest -c ./vitest.e2e.config.ts",
+    "test:coverage": "vitest --coverage"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
     "@types/node": "^24.2.0",
     "faker-js": "^1.0.0",
     "supertest": "^7.1.4",

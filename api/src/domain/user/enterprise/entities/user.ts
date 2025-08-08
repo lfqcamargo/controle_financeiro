@@ -4,10 +4,12 @@ import { Optional } from "@/core/types/optional";
 
 export interface UserProps {
   email: string;
-  name: string;
-  password: string;
   createdAt: Date;
-  lastLogin: Date | null;
+  lastLogin?: Date | null;
+
+  googleId: string;
+  name: string;
+  avatarUrl: string;
 }
 
 export class User extends AggregateRoot<UserProps> {
@@ -19,20 +21,24 @@ export class User extends AggregateRoot<UserProps> {
     this.props.email = email;
   }
 
+  get createdAt(): Date {
+    return this.props.createdAt;
+  }
+
+  get lastLogin(): Date | null {
+    return this.props.lastLogin ?? null;
+  }
+
+  set lastLogin(date: Date) {
+    this.props.lastLogin = date;
+  }
+
   get name(): string {
     return this.props.name;
   }
 
   set name(name: string) {
     this.props.name = name;
-  }
-
-  get password(): string {
-    return this.props.password;
-  }
-
-  set password(password: string) {
-    this.props.password = password;
   }
 
   static create(
