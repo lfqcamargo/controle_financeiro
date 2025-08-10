@@ -1,6 +1,8 @@
 import { FastifyInstance } from "fastify";
-import { authenticateGoogle } from "../http/controllers/user/authenticate-google";
+import { authenticateGoogleComposer } from "../http/controllers/user/composer/authenticate-google";
 
 export async function userRoutes(app: FastifyInstance) {
-  app.post("/auth/", authenticateGoogle);
+  app.post("/auth/", (request, reply) =>
+    authenticateGoogleComposer().handle(request, reply)
+  );
 }

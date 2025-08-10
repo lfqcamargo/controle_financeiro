@@ -8,6 +8,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module

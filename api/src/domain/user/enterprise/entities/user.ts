@@ -6,7 +6,7 @@ export interface UserProps {
   email: string;
   googleId: string;
   name: string;
-  avatarUrl: string;
+  avatarUrl?: string | null;
 
   createdAt: Date;
   lastLogin?: Date | null;
@@ -49,16 +49,16 @@ export class User extends AggregateRoot<UserProps> {
     this.props.name = name;
   }
 
-  get avatarUrl(): string {
-    return this.props.avatarUrl;
+  get avatarUrl(): string | null {
+    return this.props.avatarUrl ?? null;
   }
 
-  set avatarUrl(avatarUrl: string) {
+  set avatarUrl(avatarUrl: string | null) {
     this.props.avatarUrl = avatarUrl;
   }
 
   static create(
-    props: Optional<UserProps, "createdAt" | "lastLogin">,
+    props: Optional<UserProps, "createdAt" | "lastLogin" | "avatarUrl">,
     id?: UniqueEntityID
   ) {
     const user = new User(
@@ -66,6 +66,7 @@ export class User extends AggregateRoot<UserProps> {
         ...props,
         createdAt: new Date(),
         lastLogin: props.lastLogin ?? null,
+        avatarUrl: props.avatarUrl ?? null,
       },
       id
     );

@@ -1,4 +1,4 @@
-import { Either, left, right } from "@/core/either";
+import { Either, right } from "@/core/either";
 import { UsersRepository } from "../repositories/users-repository";
 import { User } from "../../enterprise/entities/user";
 import { Encrypter } from "../../cryptography/encrypter";
@@ -10,9 +10,12 @@ interface AuthenticateGoogleRequest {
   avatarUrl: string;
 }
 
-type AuthenticateGoogleResponse = Either<{}, {}>;
+type AuthenticateGoogleResponse = Either<
+  { message: string },
+  { accessToken: string; refreshToken: string }
+>;
 
-export class AuthenticateUseCase {
+export class AuthenticateGoogleUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private encrypter: Encrypter

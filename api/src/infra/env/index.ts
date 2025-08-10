@@ -7,6 +7,8 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
 
   GOOGLE_CLIENT_ID: z.string(),
+
+  DATABASE_URL: z.url(),
 });
 
 const _env = envSchema.safeParse(process.env);

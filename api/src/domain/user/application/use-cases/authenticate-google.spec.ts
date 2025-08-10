@@ -1,18 +1,18 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
-import { AuthenticateUseCase } from "./authenticate-google";
+import { AuthenticateGoogleUseCase } from "./authenticate-google";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 
 let usersRepository: InMemoryUsersRepository;
 let encrypter: FakeEncrypter;
-let sut: AuthenticateUseCase;
+let sut: AuthenticateGoogleUseCase;
 
 describe("Authenticate google use case", () => {
   beforeEach(() => {
     usersRepository = new InMemoryUsersRepository();
     encrypter = new FakeEncrypter();
 
-    sut = new AuthenticateUseCase(usersRepository, encrypter);
+    sut = new AuthenticateGoogleUseCase(usersRepository, encrypter);
   });
 
   it("should authenticate google", async () => {
