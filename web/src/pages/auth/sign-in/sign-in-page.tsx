@@ -1,7 +1,4 @@
-import { Suspense } from "react";
-import { SignInForm } from "./components/sign-in-form";
 import { LockKeyhole } from "lucide-react";
-import { SiGooglechrome } from "@icons-pack/react-simple-icons";
 import {
   Card,
   CardContent,
@@ -9,79 +6,85 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
+import { useMutation } from "@tanstack/react-query";
+import { authGoogle } from "@/api/user/auth-google";
+import { GoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
+import { ToastError } from "@/components/toast-error";
 
 export function SignInPage() {
-  function handleGoogleSignIn() {
-    // Aqui você chamaria seu método real de autenticação via Google
-    alert("Implementar autenticação Google aqui");
+  const navigate = useNavigate();
+
+  const { mutateAsync: authGoogleFn } = useMutation({
+    mutationFn: authGoogle,
+  });
+
+  async function handleGoogleSuccess(idToken: string) {
+    try {
+      await authGoogleFn({ idToken });
+      navigate("/");
+    } catch (err) {
+      ToastError(err);
+    }
   }
 
   return (
-    <div className="flex w-full flex-col items-center px-12 py-8">
-      <div className="mb-6 flex justify-center">
-        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 dark:bg-primary/30">
-          <LockKeyhole className="h-12 w-12 text-primary" />
-        </div>
-      </div>
-
-      <Card className="w-full max-w-[500px] border border-border bg-card shadow-lg dark:border-border/30 dark:bg-card/95">
-        <CardHeader className="space-y-2 pb-4 text-center">
-          <CardTitle className="text-3xl font-bold tracking-tight text-foreground">
-            Acessar painel
-          </CardTitle>
-          <CardDescription className="text-base text-muted-foreground">
-            Acompanhe seu estoque pelo painel do Controle Financeiro!
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className="flex flex-col gap-4 pb-4">
-          <Button
-            variant="outline"
-            className="flex items-center justify-center gap-2"
-            onClick={handleGoogleSignIn}
-          >
-            <SiGooglechrome size={20} />
-            Entrar com Google
-          </Button>
-
-          <div className="my-2 text-muted-foreground ">
-            <span className="flex w-full pb-3 text-sm dark:bg-card/95 justify-center">
-              ou
-            </span>
-            <Separator />
+    <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-6">
+        {/* Logo/Icon Section */}
+        <div className="flex justify-center">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-primary shadow-glow">
+            <LockKeyhole className="h-10 w-10 text-white" />
           </div>
-        </CardContent>
+        </div>
 
-        <CardContent className="pb-8">
-          <Suspense fallback={<div>Carregando...</div>}>
-            <SignInForm />
-          </Suspense>
-        </CardContent>
-      </Card>
+        {/* Main Card */}
+        <Card className="border-0 shadow-elegant backdrop-blur-sm bg-card/95">
+          <CardHeader className="space-y-4 pb-6 text-center">
+            <div className="space-y-2">
+              <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
+                Bem-vindo de volta
+              </CardTitle>
+              <CardDescription className="text-muted-foreground">
+                Acesse seu painel de controle financeiro
+              </CardDescription>
+            </div>
+          </CardHeader>
 
-      <div className="mt-6 flex w-full max-w-[500px] justify-between">
-        <Button
-          variant="ghost"
-          asChild
-          size="sm"
-          className="text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:bg-background/10 dark:hover:text-foreground"
-        >
-          <Link to={"/auth/help"} className="text-sm">
-            Precisa de ajuda?
-          </Link>
-        </Button>
+          <CardContent className="space-y-4 pb-8">
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                handleGoogleSuccess(credentialResponse.credential ?? "");
+              }}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+            />
+            {/* Additional Info */}
+            <div className="text-center pt-2">
+              <p className="text-xs text-muted-foreground">
+                Ao continuar, você concorda com nossos{" "}
+                <a href="#" className="text-primary hover:underline">
+                  Termos de Uso
+                </a>{" "}
+                e{" "}
+                <a href="#" className="text-primary hover:underline">
+                  Política de Privacidade
+                </a>
+              </p>
+            </div>
+          </CardContent>
+        </Card>
 
-        <Button
-          variant="default"
-          asChild
-          size="sm"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90"
-        >
-          <Link to={"/auth/sign-up"}>Novo Usuário</Link>
-        </Button>
+        {/* Footer */}
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">
+            Precisa de ajuda?{" "}
+            <a href="#" className="text-primary hover:underline font-medium">
+              Entre em contato
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

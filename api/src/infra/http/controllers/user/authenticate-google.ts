@@ -14,9 +14,9 @@ export class AuthenticateGoogleController {
   ) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    const { idToken } = authenticateGoogleBodySchema.parse(request.body);
-
     try {
+      const { idToken } = authenticateGoogleBodySchema.parse(request.body);
+
       const ticket = await this.googleClient.verifyIdToken({ idToken });
       const payload = ticket.getPayload();
 
@@ -48,6 +48,7 @@ export class AuthenticateGoogleController {
 
       return reply.status(200).send({ message: "loggin" });
     } catch (err) {
+      console.error("Erro na autenticação:", err);
       return reply.status(403).send({ error: "Authentication failed" });
     }
   }

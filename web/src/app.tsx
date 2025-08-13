@@ -5,13 +5,17 @@ import { routes } from "./routes";
 
 import { ThemeProvider } from "./components/theme/theme-provider";
 import { Toaster } from "sonner";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { env } from "@/env";
 
 export function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="controle-financeiro">
       <Toaster />
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={routes} />
+        <GoogleOAuthProvider clientId={env.VITE_GOOGLE_CLIENT_ID}>
+          <RouterProvider router={routes} />
+        </GoogleOAuthProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

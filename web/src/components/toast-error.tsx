@@ -18,12 +18,8 @@ export function ToastError(error: unknown) {
     }
 
     const data = response.data as AxiosErrorResponseData;
-    console.log(data.message);
-
-    switch (data.message) {
-      default:
-        return toast.error("Erro interno do servidor.");
-    }
+    console.log(data);
+    return toast.error(data.message);
   }
 
   return toast.error(
